@@ -3,13 +3,15 @@ countdown-idle
 ==============
 I wanted simple cli countdown timer to use it for Pomodoro and as a tea timer.
 All timers I found were too resource intensive - they were producing lot of CPU
-wakeups (launch `powertop` and see for yourself).
+wakeups (launch ``powertop`` and see for yourself).
 
 This timer is very light on resources, the disadvantage is that it prints
-remaining time only when asked (pressing ENTER), but that's enough for my
-needs.
+updated remaining time only when asked (pressing ENTER), but that's enough for
+my needs.
 
-Example::
+Example
+-------
+::
 
     $ countdown.sh --help
     countdown.sh [hour] [min] sec
