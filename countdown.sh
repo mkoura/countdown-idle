@@ -16,12 +16,28 @@ case "$#" in
   * ) echo "$help_msg" >&2; exit 1 ;;
 esac
 
+time_uptime() {
+  read sec _  < /proc/uptime && echo "${sec%.*}"
+}
+
+time_date() {
+  date +%s
+}
+
+# avoid fork/exec alltogether if possible
+if [ -e /proc/uptime ]; then
+  timestamp="time_uptime"
+else
+  timestamp="time_date"
+fi
+
+
 hsec=0 ; msec=0
 [ -n "$hour" ] && hsec="$((hour * 3600))"
 [ -n "$min" ] && msec="$((min * 60))"
 sec="$((hsec + msec + sec))"
 
-now="$(date +%s)"
+now="$($timestamp)"
 finish="$((now + sec))"
 
 # Print newline and return to previous line.
@@ -40,11 +56,12 @@ while [ "$now" -lt "$finish" ]; do
     printf "\r%02d:%02d:%02d (press ENTER to update)\033[0K" $reh $rem $res
 
     # wait for ENTER, or until the time is up
-    read -t "$togo" || break
-    # ENTER was pressed, return to previous line
-    printf "\033[1A\033[2K"
+    if read -t "$togo"; then
+      # ENTER was pressed, return to previous line
+      printf "\033[1A\033[2K"
+    fi
 
-    now="$(date +%s)"
+    now="$($timestamp)"
 done
 
 printf "\rTime's up!\033[0K\n"
