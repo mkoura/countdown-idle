@@ -10,14 +10,14 @@ case "$1" in
 esac
 
 case "$#" in
-  3 ) hour="$1"; min="$2"; sec="$3" ;;
-  2 ) min="$1"; sec="$2" ;;
-  1 ) sec="$1" ;;
+  3 ) hour="${1::5}"; min="${2::10}"; sec="${3::10}" ;;
+  2 ) min="${1::10}"; sec="${2::10}" ;;
+  1 ) sec="${1::10}" ;;
   * ) echo "$help_msg" >&2; exit 1 ;;
 esac
 
 time_uptime() {
-  read sec _  < /proc/uptime && echo "${sec%.*}"
+  read s _  < /proc/uptime && echo "${s%.*}"
 }
 
 time_date() {
@@ -31,20 +31,18 @@ else
   timestamp="time_date"
 fi
 
+now="$($timestamp)"
 
 hsec=0 ; msec=0
 [ -n "$hour" ] && hsec="$((hour * 3600))"
 [ -n "$min" ] && msec="$((min * 60))"
-sec="$((hsec + msec + sec))"
-
-now="$($timestamp)"
-finish="$((now + sec))"
+finish="$((now + hsec + msec + sec))"
 
 while [ "$now" -lt "$finish" ]; do
     togo="$((finish - now))"
 
     # calculate and print remaining time
-    reh="$((togo / 3600 % 100))"
+    reh="$((togo / 3600))"
     rem="$((togo / 60 % 60))"
     res="$((togo % 60))"
     # always print time on the same line
