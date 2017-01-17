@@ -40,11 +40,6 @@ sec="$((hsec + msec + sec))"
 now="$($timestamp)"
 finish="$((now + sec))"
 
-# Print newline and return to previous line.
-# This way the newline won't be displayed only
-# after ENTER is pressed for the first time.
-printf "\n\033[1A\033[2K"
-
 while [ "$now" -lt "$finish" ]; do
     togo="$((finish - now))"
 
@@ -56,10 +51,7 @@ while [ "$now" -lt "$finish" ]; do
     printf "\r%02d:%02d:%02d (press ENTER to update)\033[0K" $reh $rem $res
 
     # wait for ENTER, or until the time is up
-    if read -t "$togo"; then
-      # ENTER was pressed, return to previous line
-      printf "\033[1A\033[2K"
-    fi
+    read -s -t "$togo"
 
     now="$($timestamp)"
 done
