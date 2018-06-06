@@ -1,5 +1,5 @@
 ==============
-countdown-idle
+Moved to https://gitlab.com/mkourim/countdown-idle
 ==============
 I wanted simple cli countdown timer to use it for Pomodoro and as a tea timer.
 All timers I tried were too resource intensive - they were producing lot of CPU
